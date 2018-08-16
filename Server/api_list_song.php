@@ -18,6 +18,12 @@ $arr_list_song = array();
 if(isset($_POST['id_playlist'])) {
     $id_playlist = $_POST['id_playlist'];
     $query = "SELECT * FROM song WHERE FIND_IN_SET('$id_playlist', id_playlist) ";
+} elseif (isset($_POST['id_album'])) {
+    $id_album = $_POST['id_album'];
+    $query = "SELECT * FROM song WHERE FIND_IN_SET('$id_album', id_album)";
+} elseif (isset($_POST['id_category'])) {
+    $id_category = $_POST['id_category'];
+    $query = "SELECT * FROM song WHERE FIND_IN_SET('$id_category', id_category )";
 }
 
 $data_songs = mysqli_query($conn, $query);
