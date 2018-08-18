@@ -1,5 +1,6 @@
-package com.vtt.musiconline;
+package com.vtt.musiconline.view;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
@@ -10,7 +11,9 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import com.vtt.musiconline.R;
+
+public class PlayActivity extends AppCompatActivity {
 
     Button playBtn;
     SeekBar positionBar;
@@ -76,7 +79,12 @@ public class MainActivity extends AppCompatActivity {
         }).start();
 
     }
-
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(PlayActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(intent);
+    }
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -118,5 +126,10 @@ public class MainActivity extends AppCompatActivity {
             playBtn.setBackgroundResource(R.drawable.play);
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }
