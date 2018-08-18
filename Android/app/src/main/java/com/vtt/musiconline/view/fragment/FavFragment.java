@@ -10,8 +10,9 @@ import com.vtt.musiconline.R;
 
 public class FavFragment extends Fragment {
 
-    public FavFragment() {
-        // Required empty public constructor
+    public static FavFragment newInstance() {
+        FavFragment fragment = new FavFragment();
+        return fragment;
     }
 
     @Override

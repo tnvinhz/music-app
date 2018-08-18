@@ -33,6 +33,7 @@ public class ListSongActivity extends AppCompatActivity {
     ListSongAdapter songAdapter;
     RecyclerView recyclerViewListSong;
     List<ListSong> songList  = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,12 +60,7 @@ public class ListSongActivity extends AppCompatActivity {
         if(id_album!= null) getListSongAlbum(id_album);
         if(id_category!= null) getListSongCate(id_category);
 
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        btn_back.setOnClickListener(view -> finish());
     }
 
     private void getListSongPlayList(String id_playlist) {
@@ -73,22 +69,19 @@ public class ListSongActivity extends AppCompatActivity {
                 new PostListSongPlaylistTask.Listener() {
                     @Override
                     public void onSuccess(List<ListSong> listSongs) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    runOnUiThread(() -> CircleProgressBar.getInstance(ListSongActivity.this).dismissProgress());
-                                    songList = listSongs;
-                                    songAdapter = new ListSongAdapter(ListSongActivity.this, songList, new ListSongAdapter.ItemClickListener() {
-                                        @Override
-                                        public void onItemSongClick(ListSong listSong, int position) {
-                                            Toast.makeText(ListSongActivity.this, "id" + listSong.getNameSong(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                    recyclerViewListSong.setAdapter(songAdapter);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+                        runOnUiThread(() -> {
+                            try {
+                                runOnUiThread(() -> CircleProgressBar.getInstance(ListSongActivity.this).dismissProgress());
+                                songList = listSongs;
+                                songAdapter = new ListSongAdapter(ListSongActivity.this, songList, new ListSongAdapter.ItemClickListener() {
+                                    @Override
+                                    public void onItemSongClick(ListSong listSong, int position) {
+                                        Toast.makeText(ListSongActivity.this, "id" + listSong.getNameSong(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                recyclerViewListSong.setAdapter(songAdapter);
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         });
                     }
@@ -107,22 +100,19 @@ public class ListSongActivity extends AppCompatActivity {
                 new PostListSongAlbumTask.Listener() {
                     @Override
                     public void onSuccess(List<ListSong> listSongs) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    runOnUiThread(() -> CircleProgressBar.getInstance(ListSongActivity.this).dismissProgress());
-                                    songList = listSongs;
-                                    songAdapter = new ListSongAdapter(ListSongActivity.this, songList, new ListSongAdapter.ItemClickListener() {
-                                        @Override
-                                        public void onItemSongClick(ListSong listSong, int position) {
-                                            Toast.makeText(ListSongActivity.this, "id" + listSong.getNameSong(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                    recyclerViewListSong.setAdapter(songAdapter);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+                        runOnUiThread(() -> {
+                            try {
+                                runOnUiThread(() -> CircleProgressBar.getInstance(ListSongActivity.this).dismissProgress());
+                                songList = listSongs;
+                                songAdapter = new ListSongAdapter(ListSongActivity.this, songList, new ListSongAdapter.ItemClickListener() {
+                                    @Override
+                                    public void onItemSongClick(ListSong listSong, int position) {
+                                        Toast.makeText(ListSongActivity.this, "id" + listSong.getNameSong(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                recyclerViewListSong.setAdapter(songAdapter);
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         });
                     }
@@ -141,22 +131,19 @@ public class ListSongActivity extends AppCompatActivity {
                 new PostListSongCateTask.Listener() {
                     @Override
                     public void onSuccess(List<ListSong> listSongs) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    runOnUiThread(() -> CircleProgressBar.getInstance(ListSongActivity.this).dismissProgress());
-                                    songList = listSongs;
-                                    songAdapter = new ListSongAdapter(ListSongActivity.this, songList, new ListSongAdapter.ItemClickListener() {
-                                        @Override
-                                        public void onItemSongClick(ListSong listSong, int position) {
-                                            Toast.makeText(ListSongActivity.this, "id" + listSong.getNameSong(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                    recyclerViewListSong.setAdapter(songAdapter);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+                        runOnUiThread(() -> {
+                            try {
+                                runOnUiThread(() -> CircleProgressBar.getInstance(ListSongActivity.this).dismissProgress());
+                                songList = listSongs;
+                                songAdapter = new ListSongAdapter(ListSongActivity.this, songList, new ListSongAdapter.ItemClickListener() {
+                                    @Override
+                                    public void onItemSongClick(ListSong listSong, int position) {
+                                        Toast.makeText(ListSongActivity.this, "id" + listSong.getNameSong(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                recyclerViewListSong.setAdapter(songAdapter);
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         });
                     }

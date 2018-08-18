@@ -1,78 +1,138 @@
 package com.vtt.musiconline.view;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.RelativeLayout;
+import android.util.Log;
 
+import com.google.gson.Gson;
 import com.vtt.musiconline.R;
+import com.vtt.musiconline.api.asynctask.GetAlbumTask;
+import com.vtt.musiconline.api.asynctask.GetCategoryTask;
+import com.vtt.musiconline.api.asynctask.GetPlayListTask;
+import com.vtt.musiconline.model.Album;
+import com.vtt.musiconline.model.Category;
+import com.vtt.musiconline.model.Playlist;
+import com.vtt.musiconline.utils.CircleProgressBar;
 import com.vtt.musiconline.view.fragment.FavFragment;
-import com.vtt.musiconline.view.fragment.ListFragment;
 import com.vtt.musiconline.view.fragment.MainFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+import static android.support.constraint.Constraints.TAG;
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private RelativeLayout player;
+public class MainActivity extends AppCompatActivity {
+    String gsonAlbum, gsonPlaylist, gsonCate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getPlaylist();
+        getAlbum();
+        getCategory();
 
+        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
 
-        viewPager = findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                item -> {
+                    switch (item.getItemId()) {
+                        case R.id.navigation_home:
+                            addFragment(MainFragment.newInstance(gsonPlaylist,gsonAlbum,gsonCate));
+                            break;
+                        case R.id.navigation_fav:
+                            addFragment(FavFragment.newInstance());
+                            break;
+                    }
+                    return true;
+                });
 
-        tabLayout = findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
 
     }
-
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new MainFragment(), "Trang Chủ");
-        adapter.addFragment(new ListFragment(), "Playlist");
-        adapter.addFragment(new FavFragment(), "Yêu Thích");
-        viewPager.setAdapter(adapter);
+    private void addFragment( Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_screen, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
+    private void getPlaylist() {
+        runOnUiThread(() -> CircleProgressBar.getInstance(MainActivity.this).showProgress());
+        (new GetPlayListTask(MainActivity.this,
+                new GetPlayListTask.Listener() {
+                    @Override
+                    public void onSuccess(List<Playlist> playlists) {
+                        runOnUiThread(() -> {
+                            try {
+                                Gson gson = new Gson();
+                                gsonPlaylist = gson.toJson(playlists);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    }
 
-        ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
+                    @Override
+                    public void onFailure(int code, String message) {
+                        Log.d(TAG, "onFailure: " + message);
+                        runOnUiThread(() -> CircleProgressBar.getInstance(MainActivity.this).dismissProgress());
+                    }
+                })).execute();
+    }
 
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
+    private void getAlbum() {
+        (new GetAlbumTask(MainActivity.this,
+                new GetAlbumTask.Listener() {
+                    @Override
+                    public void onSuccess(List<Album> albums) {
+                        runOnUiThread(() -> {
+                            try {
+                                Gson gson = new Gson();
+                                gsonAlbum = gson.toJson(albums);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    }
 
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
+                    @Override
+                    public void onFailure(int code, String message) {
+                        Log.d(TAG, "onFailure: " + message);
+                        runOnUiThread(() -> CircleProgressBar.getInstance(MainActivity.this).dismissProgress());
+                    }
+                })).execute();
+    }
 
-        public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
+    private void getCategory() {
+        (new GetCategoryTask(MainActivity.this,
+                new GetCategoryTask.Listener() {
+                    @Override
+                    public void onSuccess(List<Category> categories) {
+                        runOnUiThread(() -> {
+                            try {
+                                runOnUiThread(() -> CircleProgressBar.getInstance(MainActivity.this).dismissProgress());
+                                Gson gson = new Gson();
+                                gsonCate = gson.toJson(categories);
+                                addFragment(MainFragment.newInstance(gsonPlaylist,gsonAlbum,gsonCate));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
+                    @Override
+                    public void onFailure(int code, String message) {
+                        Log.d(TAG, "onFailure: " + message);
+                        runOnUiThread(() -> CircleProgressBar.getInstance(MainActivity.this).dismissProgress());
+                    }
+                })).execute();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }
