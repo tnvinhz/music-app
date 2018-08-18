@@ -100,6 +100,7 @@ public class MainFragment extends Fragment {
             Intent intent = new Intent(getActivity(), ListSongActivity.class);
             intent.putExtra("id_playlist", playlist.getIdPlaylist());
             intent.putExtra("name", playlist.getNamePlaylist());
+            intent.putExtra("type","main");
             startActivity(intent);
         });
         recyclerViewPlayList.setAdapter(adapterPlaylist);
@@ -120,6 +121,7 @@ public class MainFragment extends Fragment {
             Intent intent = new Intent(getActivity(), ListSongActivity.class);
             intent.putExtra("id_album", album1.getIdAlbum());
             intent.putExtra("name", album1.getNameAlbum());
+            intent.putExtra("type","main");
             startActivity(intent);
         });
         recyclerViewAlbum.setAdapter(adapterAlbum);
@@ -140,6 +142,7 @@ public class MainFragment extends Fragment {
             Intent intent = new Intent(getActivity(), ListSongActivity.class);
             intent.putExtra("id_category", category1.getIdCategory());
             intent.putExtra("name", category1.getNameCategory());
+            intent.putExtra("type","main");
             startActivity(intent);
         });
         recyclerViewCate.setAdapter(adapterCate);

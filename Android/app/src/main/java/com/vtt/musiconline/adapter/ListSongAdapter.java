@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.vtt.musiconline.R;
 import com.vtt.musiconline.model.ListSong;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListSongAdapter extends RecyclerView.Adapter<ListSongAdapter.ViewHolder> {
@@ -77,5 +78,10 @@ public class ListSongAdapter extends RecyclerView.Adapter<ListSongAdapter.ViewHo
 
     public interface ItemClickListener {
         void onItemSongClick(ListSong listSong, int position);
+    }
+
+    public void filterList(ArrayList<ListSong> filteredList) {
+        mData = filteredList;
+        notifyDataSetChanged();
     }
 }

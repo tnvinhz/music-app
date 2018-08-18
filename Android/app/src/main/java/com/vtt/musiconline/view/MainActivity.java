@@ -1,18 +1,22 @@
 package com.vtt.musiconline.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
 import com.vtt.musiconline.R;
 import com.vtt.musiconline.api.asynctask.GetAlbumTask;
 import com.vtt.musiconline.api.asynctask.GetCategoryTask;
 import com.vtt.musiconline.api.asynctask.GetPlayListTask;
+import com.vtt.musiconline.api.asynctask.PostListSongAllTask;
 import com.vtt.musiconline.model.Album;
 import com.vtt.musiconline.model.Category;
+import com.vtt.musiconline.model.ListSong;
 import com.vtt.musiconline.model.Playlist;
 import com.vtt.musiconline.utils.CircleProgressBar;
 import com.vtt.musiconline.view.fragment.FavFragment;
@@ -23,8 +27,8 @@ import java.util.List;
 import static android.support.constraint.Constraints.TAG;
 
 public class MainActivity extends AppCompatActivity {
-    String gsonAlbum, gsonPlaylist, gsonCate;
-
+    String gsonAlbum, gsonPlaylist, gsonCate, gsonListSong;
+    LinearLayout ll_search;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,8 +36,10 @@ public class MainActivity extends AppCompatActivity {
         getPlaylist();
         getAlbum();
         getCategory();
+        getAllSong();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
+        ll_search = findViewById(R.id.ll_search);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 item -> {
@@ -47,15 +53,44 @@ public class MainActivity extends AppCompatActivity {
                     }
                     return true;
                 });
-
+        ll_search.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this,ListSongActivity.class);
+            intent.putExtra("type","search");
+            intent.putExtra("gsonlistSong", gsonListSong);
+            startActivity(intent);
+        });
 
     }
+
     private void addFragment( Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.main_screen, fragment)
                 .addToBackStack(null)
                 .commit();
+    }
+    private void getAllSong() {
+        (new PostListSongAllTask(MainActivity.this,
+                new PostListSongAllTask.Listener() {
+                    @Override
+                    public void onSuccess(List<ListSong> listSongs) {
+                        runOnUiThread(() -> {
+                            try {
+                                runOnUiThread(() -> CircleProgressBar.getInstance(MainActivity.this).dismissProgress());
+                                Gson gson = new Gson();
+                                gsonListSong = gson.toJson(listSongs);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(int code, String message) {
+                        Log.d(TAG, "onFailure: " + message);
+                        runOnUiThread(() -> CircleProgressBar.getInstance(MainActivity.this).dismissProgress());
+                    }
+                })).execute();
     }
 
     private void getPlaylist() {
@@ -112,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(List<Category> categories) {
                         runOnUiThread(() -> {
                             try {
-                                runOnUiThread(() -> CircleProgressBar.getInstance(MainActivity.this).dismissProgress());
                                 Gson gson = new Gson();
                                 gsonCate = gson.toJson(categories);
                                 addFragment(MainFragment.newInstance(gsonPlaylist,gsonAlbum,gsonCate));

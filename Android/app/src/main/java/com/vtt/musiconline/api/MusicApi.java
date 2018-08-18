@@ -34,8 +34,7 @@ public interface MusicApi {
             @Field("id_category") String id_cate
     );
 
-    @FormUrlEncoded
-    @POST("server/api_list_song.php")
+    @GET("server/api_list_song.php")
     Call<List<ListSong>> listSongAll(
     );
 

@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <LinearLayout
-        android:id="@+id/ll_search"
+    <RelativeLayout
+        android:id="@+id/rl_search"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:visibility="gone"
@@ -14,19 +14,35 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_gravity="center_vertical"
+            android:id="@+id/btn_back_search"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="15dp"
+            android:padding="5dp"
+            android:src="@drawable/back_button" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:id="@+id/editTextSearch"
+            android:layout_marginRight="45dp"
+            android:layout_centerVertical="true"
+            android:hint="Tìm kiếm bài hát..."
+            android:background="#fff"
+            android:layout_toRightOf="@+id/btn_back_search"
+            android:textColorHint="#8f8f8f"
+            android:cursorVisible="true"
+            android:textColor="#000000" />
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
             android:padding="5dp"
             android:src="@drawable/search_white" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="Tìm kiếm bài hát..."
-            android:textColor="#fff" />
-    </LinearLayout>
+    </RelativeLayout>
     <LinearLayout
         android:id="@+id/ll_bar"
         android:layout_width="match_parent"

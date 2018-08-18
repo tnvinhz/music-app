@@ -81,6 +81,7 @@ public class ListActivity extends AppCompatActivity {
                     Intent intent = new Intent(this, ListSongActivity.class);
                     intent.putExtra("id_playlist", playlist.getIdPlaylist());
                     intent.putExtra("name", playlist.getNamePlaylist());
+                    intent.putExtra("type","main");
                     startActivity(intent);
                 });
                 recyclerViewGroup.setAdapter(adapterPlaylist);
@@ -91,6 +92,7 @@ public class ListActivity extends AppCompatActivity {
                     Intent intent = new Intent(this, ListSongActivity.class);
                     intent.putExtra("id_album", album1.getIdAlbum());
                     intent.putExtra("name", album1.getNameAlbum());
+                    intent.putExtra("type","main");
                     startActivity(intent);
                 });
                 recyclerViewGroup.setAdapter(adapterAlbum);
@@ -103,6 +105,7 @@ public class ListActivity extends AppCompatActivity {
                     Intent intent = new Intent(this, ListSongActivity.class);
                     intent.putExtra("id_category", category1.getIdCategory());
                     intent.putExtra("name", category1.getNameCategory());
+                    intent.putExtra("type","main");
                     startActivity(intent);
                 });
                 recyclerViewGroup.setAdapter(adapterCate);
