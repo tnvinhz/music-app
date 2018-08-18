@@ -46,17 +46,17 @@ public class ListActivity extends AppCompatActivity {
         name = getIntent().getStringExtra("name");
         gson = getIntent().getStringExtra("gson");
         switch (name){
-            case("PLAYLISTS"):{
+            case("playlist"):{
                 TypeToken<List<Playlist>> token = new TypeToken<List<Playlist>>() {};
                 listPlaylists = new Gson().fromJson(gson, token.getType());
                 break;
             }
-            case("ALBUMS"):{
+            case("album"):{
                 TypeToken<List<Album>> token = new TypeToken<List<Album>>() {};
                 listAlbums = new Gson().fromJson(gson, token.getType());
                 break;
             }
-            case("CATEGORIES"):{
+            case("category"):{
                 TypeToken<List<Category>> token = new TypeToken<List<Category>>() {};
                 listCategories = new Gson().fromJson(gson, token.getType());
                 break;
@@ -70,6 +70,7 @@ public class ListActivity extends AppCompatActivity {
         rl_play_all = findViewById(R.id.title_play);
         tv_name = findViewById(R.id.tv_name_group);
         if (name != null) tv_name.setText(name);
+        tv_name.setAllCaps(true);
         recyclerViewGroup = findViewById(R.id.rcv_group);
         GridLayoutManager manager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         recyclerViewGroup.setLayoutManager(manager);

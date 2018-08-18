@@ -145,14 +145,14 @@ public class MainFragment extends Fragment {
         recyclerViewCate.setAdapter(adapterCate);
 
         title_playlist.setOnClickListener(view1 -> {
-            sendIntent("PLAYLISTS", sPlayList);
+            sendIntent("playlist", sPlayList);
 
         });
         title_album.setOnClickListener(view1 -> {
-            sendIntent("ALBUMS", sAlbum);
+            sendIntent("album", sAlbum);
         });
         title_category.setOnClickListener(view1 -> {
-            sendIntent("CATEGORIES", sCate);
+            sendIntent("category", sCate);
         });
     }
 
