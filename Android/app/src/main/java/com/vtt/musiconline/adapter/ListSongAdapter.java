@@ -1,5 +1,6 @@
 package com.vtt.musiconline.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,12 +21,12 @@ public class ListSongAdapter extends RecyclerView.Adapter<ListSongAdapter.ViewHo
     private List<ListSong> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
-    private Context context;
+    private Activity activity;
 
-    public ListSongAdapter(Context context, List<ListSong> data, ItemClickListener itemClickListener) {
-        this.mInflater = LayoutInflater.from(context);
+    public ListSongAdapter(Activity activity, List<ListSong> data, ItemClickListener itemClickListener) {
+        this.mInflater = LayoutInflater.from(activity);
         this.mData = data;
-        this.context = context;
+        this.activity = activity;
         this.mClickListener = itemClickListener;
     }
 
@@ -41,14 +42,11 @@ public class ListSongAdapter extends RecyclerView.Adapter<ListSongAdapter.ViewHo
         ListSong listSong = mData.get(position);
         holder.tvName.setText(listSong.getNameSong());
         holder.tvDes.setText(listSong.getSingerSong());
-        Glide.with(context)
+        Glide.with(activity)
                 .load(listSong.getImageSong())
                 .into(holder.ivSong);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mClickListener != null) mClickListener.onItemSongClick(listSong, position);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            if (mClickListener != null) mClickListener.onItemSongClick(listSong);
         });
     }
 
@@ -72,12 +70,8 @@ public class ListSongAdapter extends RecyclerView.Adapter<ListSongAdapter.ViewHo
         }
     }
 
-    public void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
-    }
-
     public interface ItemClickListener {
-        void onItemSongClick(ListSong listSong, int position);
+        void onItemSongClick(ListSong listSong);
     }
 
     public void filterList(ArrayList<ListSong> filteredList) {

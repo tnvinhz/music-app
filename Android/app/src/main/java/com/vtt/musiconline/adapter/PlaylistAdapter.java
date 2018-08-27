@@ -1,5 +1,6 @@
 package com.vtt.musiconline.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,12 +20,12 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     private List<Playlist> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
-    private Context context;
+    private Activity activity;
 
-    public PlaylistAdapter(Context context, List<Playlist> data,ItemClickListener itemClickListener) {
-        this.mInflater = LayoutInflater.from(context);
+    public PlaylistAdapter(Activity activity, List<Playlist> data,ItemClickListener itemClickListener) {
+        this.mInflater = LayoutInflater.from(activity);
         this.mData = data;
-        this.context = context;
+        this.activity = activity;
         this.mClickListener = itemClickListener;
     }
 
@@ -40,16 +41,13 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         Playlist playlist = mData.get(position);
         holder.tvName.setText(playlist.getNamePlaylist());
         holder.tvDes.setText(playlist.getNamePlaylist());
-        Glide.with(context)
+        Glide.with(activity)
                 .load(playlist.getBackgroundImagePlaylist())
 //                .thumbnail(Glide.with(context).load(R.drawable.image))
 //                .error(Glide.with(context).load(R.drawable.image))
                 .into(holder.ivPlaylist);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mClickListener != null) mClickListener.onItemPlayListClick(playlist, position);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            if (mClickListener != null) mClickListener.onItemPlayListClick(playlist);
         });
     }
 
@@ -58,9 +56,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     public int getItemCount() {
         return mData.size();
     }
-    public Playlist getItem(int id) {
-        return mData.get(id);
-    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivPlaylist;
         TextView tvName, tvDes;
@@ -73,11 +69,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         }
     }
 
-    public void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
-    }
-
     public interface ItemClickListener {
-        void onItemPlayListClick(Playlist playlist, int position);
+        void onItemPlayListClick(Playlist playlist);
     }
 }

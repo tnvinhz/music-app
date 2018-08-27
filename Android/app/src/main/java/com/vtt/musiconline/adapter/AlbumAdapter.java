@@ -1,5 +1,6 @@
 package com.vtt.musiconline.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,12 +20,12 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
     private List<Album> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
-    private Context context;
+    private Activity activity;
 
-    public AlbumAdapter(Context context, List<Album> data, ItemClickListener itemClickListener) {
-        this.mInflater = LayoutInflater.from(context);
+    public AlbumAdapter(Activity activity, List<Album> data, ItemClickListener itemClickListener) {
+        this.mInflater = LayoutInflater.from(activity);
         this.mData = data;
-        this.context = context;
+        this.activity = activity;
         this.mClickListener = itemClickListener;
     }
 
@@ -40,16 +41,13 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
         Album album = mData.get(position);
         holder.tvName.setText(album.getNameAlbum());
         holder.tvDes.setText(album.getSingerNameAlbum());
-        Glide.with(context)
+        Glide.with(activity)
                 .load(album.getImageAlbum())
 //                .thumbnail(Glide.with(context).load(R.drawable.image))
 //                .error(Glide.with(context).load(R.drawable.image))
                 .into(holder.ivAlbum);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mClickListener != null) mClickListener.onItemAlbumClick(album, position);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            if (mClickListener != null) mClickListener.onItemAlbumClick(album);
         });
     }
 
@@ -57,9 +55,6 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         return mData.size();
-    }
-    public Album getItem(int id) {
-        return mData.get(id);
     }
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivAlbum;
@@ -73,11 +68,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
         }
     }
 
-    public void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
-    }
-
     public interface ItemClickListener {
-        void onItemAlbumClick(Album album, int position);
+        void onItemAlbumClick(Album album);
     }
 }

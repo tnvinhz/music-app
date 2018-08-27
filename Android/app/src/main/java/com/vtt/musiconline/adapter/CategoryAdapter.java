@@ -1,5 +1,6 @@
 package com.vtt.musiconline.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,12 +21,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     private List<Category> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
-    private Context context;
+    private Activity activity;
 
-    public CategoryAdapter(Context context, List<Category> data, ItemClickListener itemClickListener) {
-        this.mInflater = LayoutInflater.from(context);
+    public CategoryAdapter(Activity activity, List<Category> data, ItemClickListener itemClickListener) {
+        this.mInflater = LayoutInflater.from(activity);
         this.mData = data;
-        this.context = context;
+        this.activity = activity;
         this.mClickListener = itemClickListener;
     }
 
@@ -40,16 +41,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         Category category = mData.get(position);
         holder.tvName.setText(category.getNameCategory());
-        Glide.with(context)
+        Glide.with(activity)
                 .load(category.getImageCategory())
-                .thumbnail(Glide.with(context).load(R.drawable.image))
-                .error(Glide.with(context).load(R.drawable.image))
                 .into(holder.ivCate);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mClickListener != null) mClickListener.onItemCateClick(category, position);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            if (mClickListener != null) mClickListener.onItemCateClick(category);
         });
     }
 
@@ -57,9 +53,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     @Override
     public int getItemCount() {
         return mData.size();
-    }
-    public Category getItem(int id) {
-        return mData.get(id);
     }
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivCate;
@@ -72,11 +65,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         }
     }
 
-    public void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
-    }
-
     public interface ItemClickListener {
-        void onItemCateClick(Category category, int position);
+        void onItemCateClick(Category category);
     }
 }
