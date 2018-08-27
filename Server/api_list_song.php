@@ -24,6 +24,8 @@ if(isset($_POST['id_playlist'])) {
 } elseif (isset($_POST['id_category'])) {
     $id_category = $_POST['id_category'];
     $query = "SELECT * FROM song WHERE FIND_IN_SET('$id_category', id_category )";
+} else {
+    $query = "SELECT * FROM song";
 }
 
 $data_songs = mysqli_query($conn, $query);
