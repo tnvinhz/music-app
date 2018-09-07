@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:theme">
-        <activity android:name=".view.MainActivity">
+        <activity android:name=".view.ListSongActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,7 +24,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.PlayActivity"></activity>
-        <activity android:name=".view.ListSongActivity"></activity>
     </application>
 
 </manifest>

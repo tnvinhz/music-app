@@ -44,28 +44,7 @@ public class ApiManager {
         return apiManager;
     }
 
-    public Call<List<Playlist>> playlist(){
-        return musicApi.playlist();
-    }
-
-    public Call<List<Album>> album(){
-        return musicApi.album();
-    }
-
-    public Call<List<Category>> category(){
-        return musicApi.catogory();
-    }
-
     public Call<List<ListSong>> listSongAll(){
         return musicApi.listSongAll();
-    }
-    public Call<List<ListSong>> listSongPlayList(String id_playlist){
-        return musicApi.listSongPlaylist(id_playlist);
-    }
-    public Call<List<ListSong>> listSongAlbum(String id_album){
-        return musicApi.listSongAlbum(id_album);
-    }
-    public Call<List<ListSong>> listSongCate(String id_category){
-        return musicApi.listSongCate(id_category);
     }
 }

@@ -169,7 +169,7 @@ public class PlayActivity extends AppCompatActivity {
                     tvName.setText(songList.get(position).getNameSong());
                     tvNameGroup.setText(songList.get(position).getNameSong());
                     btnPlay.setBackgroundResource(R.drawable.pause);
-                    PlaySongs(songList.get(0).getLinkSong());
+                    PlaySongs(songList.get(position).getLinkSong());
                     updateTime();
                 }
             }
