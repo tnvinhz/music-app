@@ -49,7 +49,7 @@ public class ListSongActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(threadPolicy);
         initView();
     }
-
+    //ánh xạ cac view
     private void initView() {
         rl_search = findViewById(R.id.rl_search);
         title_play = findViewById(R.id.title_play);
@@ -58,21 +58,25 @@ public class ListSongActivity extends AppCompatActivity {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerViewListSong.setLayoutManager(mLayoutManager);
         recyclerViewListSong.setNestedScrollingEnabled(false);
+        //dialog mất mạng
         noInternetDialog = new NoInternetDialog.Builder(ListSongActivity.this).build();
         noInternetDialog.setOnDismissListener(dialogInterface -> {
+            //khi có mạng thì load lại api
             if (songList.size() == 0) getAllSong();
         });
         if (songList.size() == 0) getAllSong();
     }
-
+    // lọc từ tìm kiếm
     private void filter(String text) {
         filteredList.clear();
         for (ListSong item : songList) {
+            // add item trùng với từ tìm kiếm vào list
             if (item.getNameSong().toLowerCase().contains(text.toLowerCase())) {
                 filteredList.add(item);
             }
         }
         if (text.equals("")) {
+            //all add lại tất cả item khi không tìm kiếm nữa
             filteredList.clear();
             filteredList.addAll(songList);
         }
@@ -95,7 +99,7 @@ public class ListSongActivity extends AppCompatActivity {
         noInternetDialog.onDestroy();
     }
 
-    // lấy dữ liệu search từ api
+    // lấy dữ liệu bài hát từ api
     private void getAllSong() {
         runOnUiThread(() -> CircleProgressBar.getInstance(ListSongActivity.this).showProgress());
         (new PostListSongAllTask(ListSongActivity.this,
@@ -106,6 +110,7 @@ public class ListSongActivity extends AppCompatActivity {
                             try {
                                 runOnUiThread(() -> CircleProgressBar.getInstance(ListSongActivity.this).dismissProgress());
                                 songList = listSongs;
+                                //truyền list bài hát lấy từ api về vào adapter của listview
                                 songAdapter = new ListSongAdapter(ListSongActivity.this, songList, listSong -> {
                                     //Truyền bài hát sang màn phát nhạc khi click vào bài hát
                                     runOnUiThread(() -> CircleProgressBar.getInstance(ListSongActivity.this).showProgress());
@@ -117,7 +122,9 @@ public class ListSongActivity extends AppCompatActivity {
                                     intent.putExtra("listSongPlay", playSearch);
                                     startActivity(intent);
                                 });
+                                // gán adapter vào listview để hiển thị các bài hát
                                 recyclerViewListSong.setAdapter(songAdapter);
+                                // truyền list bài hát sang màn phát nhạc khi click vào phát tất cả
                                 title_play.setOnClickListener(view -> {
                                     Intent intent = new Intent(ListSongActivity.this, PlayActivity.class);
                                     intentList.clear();

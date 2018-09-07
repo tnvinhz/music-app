@@ -58,7 +58,7 @@ public class PlayActivity extends AppCompatActivity {
         songList = new Gson().fromJson(gsonlistSong, token.getType());
         initView();
     }
-
+    //ánh xạ các view
     private void initView() {
         btnPlay = findViewById(R.id.btnPlay);
         btnNext = findViewById(R.id.btnNext);
@@ -84,29 +84,37 @@ public class PlayActivity extends AppCompatActivity {
             }
 
         });
+        // tải ảnh nền của bài hát
         Glide.with(this)
                 .load(songList.get(0).getImageSong())
                 .into(imgSong);
         tvName.setText(songList.get(0).getNameSong());
         tvNameGroup.setText(songList.get(0).getNameSong());
         btnPlay.setBackgroundResource(R.drawable.pause);
+        // khởi tạo mediapayer
         PlaySongs(songList.get(0).getLinkSong());
+        //bắt sự kiện khi click các nút
         eventClick();
 
 
     }
 
     private void eventClick() {
+        //click nút back
         btnBack.setOnClickListener(view -> finish());
+        //click nút play
         btnPlay.setOnClickListener(view -> {
             if(mediaPlayer.isPlaying()){
+                // pause nếu đang play
                 mediaPlayer.pause();
                 btnPlay.setBackgroundResource(R.drawable.play);
             } else {
+                //play nếu đang pause
                 mediaPlayer.start();
                 btnPlay.setBackgroundResource(R.drawable.pause);
             }
         });
+        //click nút lặp lại
         btnRefesh.setOnClickListener(view -> {
             if(!repeat){
                 if(checkrandom){
@@ -121,6 +129,7 @@ public class PlayActivity extends AppCompatActivity {
                 repeat = false;
             }
         });
+        // click nút đảo bài
         btnSuffle.setOnClickListener(view -> {
             if(!checkrandom){
                 if(repeat){
@@ -135,7 +144,7 @@ public class PlayActivity extends AppCompatActivity {
                 checkrandom = false;
             }
         });
-
+    // click nút next
         btnNext.setOnClickListener(view -> {
             if(songList.size() >0){
                 if(mediaPlayer.isPlaying() || mediaPlayer != null){
@@ -182,7 +191,7 @@ public class PlayActivity extends AppCompatActivity {
                 btnNext.setClickable(true);
             },5000);
         });
-
+        // click nút previous
         btnPre.setOnClickListener(view -> {
             if(songList.size() > 0){
                 if(mediaPlayer.isPlaying() || mediaPlayer != null){
@@ -265,21 +274,29 @@ public class PlayActivity extends AppCompatActivity {
     }
     private void PlaySongs(String linkSong) {
         try {
-            // Media Player
+            // tạo mới mediaplayer
             mediaPlayer = new MediaPlayer();
+            //truyền streamType cho mp
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            //khi mp hoàn thành thì xóa đi để khởi tạo mp mới
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 mediaPlayer.stop();
                 mediaPlayer.reset();
             });
+            //truyền url bài hát vào mp
             mediaPlayer.setDataSource(linkSong);
+            // load bài hát
             mediaPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //listener khi load xong bài hát
         mediaPlayer.setOnPreparedListener(mediaPlayer1 -> {
+            // phát bài hát
             mediaPlayer.start();
+            //set time bài hát vào positionBar
             timeSong();
+            //xử lý chạy positionBar và thời gian khi đang phát
             updateTime();
         });
     }
@@ -315,6 +332,7 @@ public class PlayActivity extends AppCompatActivity {
         handler1.postDelayed(new Runnable() {
             @Override
             public void run() {
+                // nếu next set lại position, icon nút
                 if(next){
                     if(songList.size() >0){
                         if(position< songList.size()){
