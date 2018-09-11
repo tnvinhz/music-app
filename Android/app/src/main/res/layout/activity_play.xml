@@ -86,7 +86,7 @@
         android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:weightSum="5">
+        android:weightSum="6">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -109,6 +109,18 @@
                 android:layout_centerInParent="true"
                 android:id="@+id/btnPre"
                 android:background="@drawable/back"
+                />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <Button
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_centerInParent="true"
+                android:id="@+id/btnStop"
+                android:background="@drawable/stop_gray"
                 />
         </RelativeLayout>
         <RelativeLayout

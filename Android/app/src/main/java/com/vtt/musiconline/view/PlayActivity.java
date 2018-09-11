@@ -33,7 +33,7 @@ import am.appwise.components.ni.NoInternetDialog;
 
 public class PlayActivity extends AppCompatActivity {
     NoInternetDialog noInternetDialog;
-    Button btnPlay, btnNext, btnPre, btnRefesh, btnSuffle;
+    Button btnPlay, btnNext, btnPre, btnRefesh, btnSuffle, btnStop;
     ImageView imgSong, btnBack;
     TextView tvName, tvNameGroup;
     SeekBar positionBar;
@@ -46,6 +46,7 @@ public class PlayActivity extends AppCompatActivity {
     boolean repeat = false;
     boolean checkrandom = false;
     boolean next = false;
+    boolean isStop = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,7 @@ public class PlayActivity extends AppCompatActivity {
         btnPlay = findViewById(R.id.btnPlay);
         btnNext = findViewById(R.id.btnNext);
         btnPre = findViewById(R.id.btnPre);
+        btnStop = findViewById(R.id.btnStop);
         btnRefesh = findViewById(R.id.btnAround);
         btnSuffle = findViewById(R.id.btnSuffer);
         btnBack = findViewById(R.id.btn_back);
@@ -73,26 +75,28 @@ public class PlayActivity extends AppCompatActivity {
         tvNameGroup = findViewById(R.id.tv_name_group);
         // Position Bar
         positionBar = findViewById(R.id.positionBar);
+        position = 0;
         noInternetDialog = new NoInternetDialog.Builder(PlayActivity.this).build();
         noInternetDialog.setOnDismissListener(dialogInterface -> {
             if(mediaPlayer == null){
                 Glide.with(this)
-                        .load(songList.get(0).getImageSong())
+                        .load(songList.get(position).getImageSong())
                         .into(imgSong);
-                PlaySongs(songList.get(0).getLinkSong());
+                PlaySongs(songList.get(position).getLinkSong());
                 eventClick();
             }
 
         });
         // tải ảnh nền của bài hát
         Glide.with(this)
-                .load(songList.get(0).getImageSong())
+                .load(songList.get(position).getImageSong())
                 .into(imgSong);
-        tvName.setText(songList.get(0).getNameSong());
-        tvNameGroup.setText(songList.get(0).getNameSong());
+        tvName.setText(songList.get(position).getNameSong());
+        tvNameGroup.setText(songList.get(position).getNameSong());
         btnPlay.setBackgroundResource(R.drawable.pause);
+        btnStop.setClickable(false);
         // khởi tạo mediapayer
-        PlaySongs(songList.get(0).getLinkSong());
+        PlaySongs(songList.get(position).getLinkSong());
         //bắt sự kiện khi click các nút
         eventClick();
 
@@ -104,14 +108,34 @@ public class PlayActivity extends AppCompatActivity {
         btnBack.setOnClickListener(view -> finish());
         //click nút play
         btnPlay.setOnClickListener(view -> {
-            if(mediaPlayer.isPlaying()){
-                // pause nếu đang play
-                mediaPlayer.pause();
-                btnPlay.setBackgroundResource(R.drawable.play);
-            } else {
-                //play nếu đang pause
-                mediaPlayer.start();
+            if(!isStop){
+                PlaySongs(songList.get(position).getLinkSong());
                 btnPlay.setBackgroundResource(R.drawable.pause);
+            } else {
+                if(mediaPlayer.isPlaying()){
+                    // pause nếu đang play
+                    mediaPlayer.pause();
+                    btnPlay.setBackgroundResource(R.drawable.play);
+                } else {
+                    //play nếu đang pause
+                    mediaPlayer.start();
+                    btnPlay.setBackgroundResource(R.drawable.pause);
+                }
+            }
+
+        });
+        //click nút stop
+        btnStop.setOnClickListener(view -> {
+            if(isStop){
+                if(mediaPlayer != null){
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
+                    mediaPlayer = null;
+                    btnStop.setBackgroundResource(R.drawable.stop_gray);
+                    btnPlay.setBackgroundResource(R.drawable.play);
+                    btnStop.setClickable(false);
+                    isStop = false;
+                }
             }
         });
         //click nút lặp lại
@@ -292,6 +316,9 @@ public class PlayActivity extends AppCompatActivity {
         }
         //listener khi load xong bài hát
         mediaPlayer.setOnPreparedListener(mediaPlayer1 -> {
+            btnStop.setClickable(true);
+            btnStop.setBackgroundResource(R.drawable.stop);
+            isStop = true;
             // phát bài hát
             mediaPlayer.start();
             //set time bài hát vào positionBar
