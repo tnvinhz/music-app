@@ -30,6 +30,8 @@ public class ListSong {
     @Expose
     private String linkSong;
 
+    private Boolean isPlay = false;
+
     public String getIdSong() {
         return idSong;
     }
@@ -94,4 +96,11 @@ public class ListSong {
         this.linkSong = linkSong;
     }
 
+    public Boolean getPlay() {
+        return isPlay;
+    }
+
+    public void setPlay(Boolean play) {
+        isPlay = play;
+    }
 }

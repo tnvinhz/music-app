@@ -4,10 +4,7 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.vtt.musiconline.model.Album;
-import com.vtt.musiconline.model.Category;
 import com.vtt.musiconline.model.ListSong;
-import com.vtt.musiconline.model.Playlist;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;

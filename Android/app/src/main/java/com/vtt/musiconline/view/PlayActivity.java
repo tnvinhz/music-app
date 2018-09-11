@@ -55,10 +55,12 @@ public class PlayActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy threadPolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(threadPolicy);
         gsonlistSong = getIntent().getStringExtra("listSongPlay");
-        TypeToken<List<ListSong>> token = new TypeToken<List<ListSong>>() {};
+        TypeToken<List<ListSong>> token = new TypeToken<List<ListSong>>() {
+        };
         songList = new Gson().fromJson(gsonlistSong, token.getType());
         initView();
     }
+
     //ánh xạ các view
     private void initView() {
         btnPlay = findViewById(R.id.btnPlay);
@@ -75,10 +77,15 @@ public class PlayActivity extends AppCompatActivity {
         tvNameGroup = findViewById(R.id.tv_name_group);
         // Position Bar
         positionBar = findViewById(R.id.positionBar);
-        position = 0;
+        for (int i = 0; i < songList.size(); i++) {
+            if (songList.get(i).getPlay()) {
+                position = i;
+                break;
+            }
+        }
         noInternetDialog = new NoInternetDialog.Builder(PlayActivity.this).build();
         noInternetDialog.setOnDismissListener(dialogInterface -> {
-            if(mediaPlayer == null){
+            if (mediaPlayer == null) {
                 Glide.with(this)
                         .load(songList.get(position).getImageSong())
                         .into(imgSong);
@@ -108,11 +115,11 @@ public class PlayActivity extends AppCompatActivity {
         btnBack.setOnClickListener(view -> finish());
         //click nút play
         btnPlay.setOnClickListener(view -> {
-            if(!isStop){
+            if (!isStop) {
                 PlaySongs(songList.get(position).getLinkSong());
                 btnPlay.setBackgroundResource(R.drawable.pause);
             } else {
-                if(mediaPlayer.isPlaying()){
+                if (mediaPlayer.isPlaying()) {
                     // pause nếu đang play
                     mediaPlayer.pause();
                     btnPlay.setBackgroundResource(R.drawable.play);
@@ -126,11 +133,14 @@ public class PlayActivity extends AppCompatActivity {
         });
         //click nút stop
         btnStop.setOnClickListener(view -> {
-            if(isStop){
-                if(mediaPlayer != null){
+            if (isStop) {
+                if (mediaPlayer != null) {
                     mediaPlayer.stop();
                     mediaPlayer.release();
                     mediaPlayer = null;
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
+                    elapsedTimeLabel.setText(simpleDateFormat.format(0));
+                    positionBar.setProgress(0);
                     btnStop.setBackgroundResource(R.drawable.stop_gray);
                     btnPlay.setBackgroundResource(R.drawable.play);
                     btnStop.setClickable(false);
@@ -140,8 +150,8 @@ public class PlayActivity extends AppCompatActivity {
         });
         //click nút lặp lại
         btnRefesh.setOnClickListener(view -> {
-            if(!repeat){
-                if(checkrandom){
+            if (!repeat) {
+                if (checkrandom) {
                     checkrandom = false;
                     btnRefesh.setBackgroundResource(R.drawable.refresh);
                     btnSuffle.setBackgroundResource(R.drawable.suffle_gray);
@@ -155,8 +165,8 @@ public class PlayActivity extends AppCompatActivity {
         });
         // click nút đảo bài
         btnSuffle.setOnClickListener(view -> {
-            if(!checkrandom){
-                if(repeat){
+            if (!checkrandom) {
+                if (repeat) {
                     repeat = false;
                     btnRefesh.setBackgroundResource(R.drawable.refresh_gray);
                     btnSuffle.setBackgroundResource(R.drawable.suffle);
@@ -168,32 +178,34 @@ public class PlayActivity extends AppCompatActivity {
                 checkrandom = false;
             }
         });
-    // click nút next
+        // click nút next
         btnNext.setOnClickListener(view -> {
-            if(songList.size() >0){
-                if(mediaPlayer.isPlaying() || mediaPlayer != null){
-                    mediaPlayer.stop();
-                    mediaPlayer.release();
-                    mediaPlayer = null;
+            if (songList.size() > 0) {
+                if (mediaPlayer != null) {
+                    if (mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                        mediaPlayer.release();
+                        mediaPlayer = null;
+                    }
                 }
-                if(position< songList.size()){
+                if (position < songList.size()) {
                     btnPlay.setBackgroundResource(R.drawable.pause);
                     position++;
-                    if(repeat){
-                        if(position == 0){
+                    if (repeat) {
+                        if (position == 0) {
                             position = songList.size();
                         }
                         position -= 1;
                     }
-                    if(checkrandom){
+                    if (checkrandom) {
                         Random random = new Random();
                         int iRandom = random.nextInt(songList.size());
-                        if(iRandom == position){
-                            position = iRandom-1;
+                        if (iRandom == position) {
+                            position = iRandom - 1;
                         }
                         position = iRandom;
                     }
-                    if (position > songList.size()-1){
+                    if (position > songList.size() - 1) {
                         position = 0;
                     }
                     Glide.with(this)
@@ -213,30 +225,32 @@ public class PlayActivity extends AppCompatActivity {
             handler.postDelayed(() -> {
                 btnPre.setClickable(true);
                 btnNext.setClickable(true);
-            },5000);
+            }, 5000);
         });
         // click nút previous
         btnPre.setOnClickListener(view -> {
-            if(songList.size() > 0){
-                if(mediaPlayer.isPlaying() || mediaPlayer != null){
-                    mediaPlayer.stop();
-                    mediaPlayer.release();
-                    mediaPlayer = null;
+            if (songList.size() > 0) {
+                if (mediaPlayer != null) {
+                    if (mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                        mediaPlayer.release();
+                        mediaPlayer = null;
+                    }
                 }
-                if(position< songList.size()){
+                if (position < songList.size()) {
                     btnPlay.setBackgroundResource(R.drawable.pause);
                     position--;
-                    if(position < 0){
-                        position = songList.size()-1 ;
+                    if (position < 0) {
+                        position = songList.size() - 1;
                     }
-                    if(repeat){
+                    if (repeat) {
                         position += 1;
                     }
-                    if(checkrandom){
+                    if (checkrandom) {
                         Random random = new Random();
                         int iRandom = random.nextInt(songList.size());
-                        if(iRandom == position){
-                            position = iRandom-1;
+                        if (iRandom == position) {
+                            position = iRandom - 1;
                         }
                         position = iRandom;
                     }
@@ -257,7 +271,7 @@ public class PlayActivity extends AppCompatActivity {
             handler.postDelayed(() -> {
                 btnPre.setClickable(true);
                 btnNext.setClickable(true);
-            },5000);
+            }, 5000);
         });
 
         positionBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -284,7 +298,6 @@ public class PlayActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -293,9 +306,10 @@ public class PlayActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mediaPlayer.stop();
+        if (mediaPlayer != null) mediaPlayer.stop();
         songList.clear();
     }
+
     private void PlaySongs(String linkSong) {
         try {
             // tạo mới mediaplayer
@@ -311,6 +325,8 @@ public class PlayActivity extends AppCompatActivity {
             mediaPlayer.setDataSource(linkSong);
             // load bài hát
             mediaPlayer.prepareAsync();
+            btnStop.setBackgroundResource(R.drawable.stop_gray);
+            btnStop.setClickable(false);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -334,16 +350,16 @@ public class PlayActivity extends AppCompatActivity {
         positionBar.setMax(mediaPlayer.getDuration());
     }
 
-    private void updateTime(){
+    private void updateTime() {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(mediaPlayer != null){
+                if (mediaPlayer != null) {
                     positionBar.setProgress(mediaPlayer.getCurrentPosition());
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
                     elapsedTimeLabel.setText(simpleDateFormat.format(mediaPlayer.getCurrentPosition()));
-                    handler.postDelayed(this,300);
+                    handler.postDelayed(this, 300);
                     mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                         next = true;
                         try {
@@ -354,32 +370,32 @@ public class PlayActivity extends AppCompatActivity {
                     });
                 }
             }
-        },300);
+        }, 300);
         Handler handler1 = new Handler();
         handler1.postDelayed(new Runnable() {
             @Override
             public void run() {
                 // nếu next set lại position, icon nút
-                if(next){
-                    if(songList.size() >0){
-                        if(position< songList.size()){
+                if (next) {
+                    if (songList.size() > 0) {
+                        if (position < songList.size()) {
                             btnPlay.setBackgroundResource(R.drawable.pause);
                             position++;
-                            if(repeat){
-                                if(position == 0){
+                            if (repeat) {
+                                if (position == 0) {
                                     position = songList.size();
                                 }
                                 position -= 1;
                             }
-                            if(checkrandom){
+                            if (checkrandom) {
                                 Random random = new Random();
                                 int iRandom = random.nextInt(songList.size());
-                                if(iRandom == position){
-                                    position = iRandom-1;
+                                if (iRandom == position) {
+                                    position = iRandom - 1;
                                 }
                                 position = iRandom;
                             }
-                            if (position > songList.size()-1){
+                            if (position > songList.size() - 1) {
                                 position = 0;
                             }
                             Glide.with(PlayActivity.this)
@@ -398,13 +414,13 @@ public class PlayActivity extends AppCompatActivity {
                     handler.postDelayed(() -> {
                         btnPre.setClickable(true);
                         btnNext.setClickable(true);
-                    },5000);
+                    }, 5000);
                     next = false;
                     handler1.removeCallbacks(this);
                 } else {
-                    handler1.postDelayed(this,1000);
+                    handler1.postDelayed(this, 1000);
                 }
             }
-        },1000);
+        }, 1000);
     }
 }

@@ -116,7 +116,14 @@ public class ListSongActivity extends AppCompatActivity {
                                     runOnUiThread(() -> CircleProgressBar.getInstance(ListSongActivity.this).showProgress());
                                     Intent intent = new Intent(ListSongActivity.this, PlayActivity.class);
                                     intentList.clear();
-                                    intentList.add(listSong);
+                                    for (int i = 0; i <songList.size(); i++){
+                                        if(listSong.getNameSong().equals(songList.get(i).getNameSong())){
+                                            songList.get(i).setPlay(true);
+                                        } else {
+                                            songList.get(i).setPlay(false);
+                                        }
+                                    }
+                                    intentList.addAll(songList);
                                     Gson gson = new Gson();
                                     String playSearch = gson.toJson(intentList);
                                     intent.putExtra("listSongPlay", playSearch);
